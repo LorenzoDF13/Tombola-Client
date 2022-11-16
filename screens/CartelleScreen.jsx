@@ -137,8 +137,8 @@ export default function CartelleScreen(props) {
             {user.username}
           </Chip>
         ))}
-        <Text>{JSON.stringify(points)}</Text>
       </ScrollView>
+      <Text>{JSON.stringify(points)}</Text>
       {
         <ScrollView>
           {arrayCartelle.map((cartella) => StampaCartella(cartella))}
