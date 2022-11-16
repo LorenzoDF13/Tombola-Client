@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation, route }) {
     loadUsername();
     if (route.params.isLeaving) {
       socket.emit("leaveRoom", route.params.room);
-      console.log("Leaved room" + route.params.room);
+      console.log("Leaved room " + route.params.room);
     }
     socket.on("connect", () => {
       setConnessione(true);
