@@ -7,6 +7,7 @@ import TabelloneScreen from "./screens/TabelloneScreen";
 import { Provider } from "react-native-paper";
 import AppBar from "./components/AppBar";
 import LobbyScreen from "./screens/LobbyScreen";
+import SettingsScreen from "./screens/SettingScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
           <Stack.Group>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Lobby" component={LobbyScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
           </Stack.Group>
           <Stack.Screen name="Cartelle" component={CartelleScreen} />
           <Stack.Screen name="Tabellone" component={TabelloneScreen} />

@@ -7,6 +7,14 @@ export default function AppBar({ back, navigation, route }) {
     <Appbar.Header elevated>
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content title={route.name} />
+      {route.name == "Home" ? (
+        <Appbar.Action
+          icon="cog"
+          onPress={() => navigation.navigate("Settings")}
+        ></Appbar.Action>
+      ) : (
+        ""
+      )}
     </Appbar.Header>
   );
 }
