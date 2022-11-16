@@ -12,7 +12,7 @@ import socket from "../utils/socket";
 import CreaPartitaModal from "../components/CreaPartitaModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PartecipaPartitaModal from "../components/PartecipaPartitaModal";
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const theme = useTheme();
   const [username, setUsername] = useState("");
   const [connessione, setConnessione] = useState(socket.connected);
@@ -24,6 +24,11 @@ export default function HomeScreen({ navigation }) {
   }
   useEffect(() => {
     loadUsername();
+    if (route.params?.isLeaving) {
+      socket.emit("leaveRoom", route.params.room);
+      console.log("Leaved room " + route.params.room);
+      route.params.isLeaving = false;
+    }
     socket.on("connect", () => {
       setConnessione(true);
     });
@@ -39,7 +44,7 @@ export default function HomeScreen({ navigation }) {
       socket.off("disconnect");
       socket.off("pong");
     };
-  }, []);
+  }, [route.params]);
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <Text>{connessione ? "CONNESSO" : "NON CONNESSO"}</Text>

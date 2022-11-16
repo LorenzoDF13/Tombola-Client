@@ -12,7 +12,7 @@ export default StyleSheet.create({
     color: "white",
     padding: 10,
     width: 50,
-    margin: 10,
+    margin: 15,
     marginBottom: 0,
     textAlign: "center",
     borderRadius: 50,
@@ -25,7 +25,6 @@ export default StyleSheet.create({
   },
   cartellaText: {
     borderWidth: 1,
-    borderColor: "red",
     padding: 10,
     fontSize: 15,
   },

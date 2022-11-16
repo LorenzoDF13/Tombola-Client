@@ -9,7 +9,7 @@ export default function LobbyScreen({ navigation, route }) {
 
   const numeroCartelle = route.params.numeroCartelle;
   const tabelloneAutomatico = route.params.tabelloneAutomatico;
-  const [users, setUsers] = useState([]);
+  let [users, setUsers] = useState([]);
   useEffect(() => {
     if (creator) {
       socket.emit(
@@ -21,31 +21,31 @@ export default function LobbyScreen({ navigation, route }) {
             navigation.navigate("Home");
             return;
           }
-          console.log(users);
+
           setUsers(users);
         }
       );
     } else {
-      socket.emit("joinRoom", room, (error, users) => {
+      socket.emit("joinRoom", room, (error, u /*USERS*/) => {
         if (error) {
           Alert.alert("ATTENZIONE", error);
           navigation.navigate("Home");
           return;
         }
-
-        console.log(users);
-        setUsers(users);
+        users = u;
+        setUsers(u);
       });
     }
     socket.on("disconnect", () => {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
       navigation.navigate("Home");
     });
-    socket.on("roomChange", (users) => {
-      setUsers(users);
+    socket.on("roomChange", (u /**USERS */) => {
+      users = u;
+      setUsers(u);
     });
     socket.on("startGame", (numeroCartelle) => {
-      navigation.navigate("Cartelle", { numeroCartelle, users });
+      navigation.navigate("Cartelle", { numeroCartelle, users, room });
     });
     return () => {
       socket.off("connect");
@@ -82,7 +82,12 @@ export default function LobbyScreen({ navigation, route }) {
             return;
           }
           socket.emit("startGame", room);
-          navigation.navigate("Cartelle", { numeroCartelle, users });
+          navigation.navigate("Cartelle", {
+            numeroCartelle,
+            users,
+            room,
+            creator,
+          });
         }}
       >
         Start

@@ -2,9 +2,11 @@ import { View, Text, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import socket from "../utils/socket";
 import Styles from "../styles/CartelleScreenStyle";
-import { Chip } from "react-native-paper";
+import { Chip, useTheme } from "react-native-paper";
 import * as Speech from "expo-speech";
 export default function CartelleScreen(props) {
+  const theme = useTheme();
+  //PARAMETRI
   const room = props.route.params.room;
   const numeroCartelle = props.route.params.numeroCartelle;
   //PUNTI
@@ -17,26 +19,24 @@ export default function CartelleScreen(props) {
   //NUMERI ESTRATTI
   const [extractedNumber, setExtractedNumber] = useState("");
   const [extractedNumbers, setExtractedNumbers] = useState([]);
-  const [arrayCartelle, setArrayCartelle] = useState([]);
+  const [arrayCartelle, setArrayCartelle] = useState(() => []);
   const [users, setUsers] = useState(props.route.params.users); // UTENTI NELLA STANZA
 
   useEffect(() => {
     for (let i = 0; i < numeroCartelle; i++) {
-      setArrayCartelle((prev) => [...prev, GeneraCartella()]);
+      arrayCartelle.push(GeneraCartella());
+      setArrayCartelle(arrayCartelle);
     }
-
     socket.on("extractedNumber", (data) => {
       //console.log("ESTRATTO " + data + " DAL SERVER");
       extractedNumbers.push(data);
       Speech.speak("ESTRATTO IL NUMERO " + data);
       //CHECK IF THERE IS A POINT
-      for (let i = 0; i < arrayCartelle.length; i++) {
+      for (let i = 0; i < numeroCartelle; i++) {
         let countTombola = 0;
-        console.log("entrato " + arrayCartelle.length);
         for (let j = 0; j < 3; j++) {
-          console.log("entrato riga" + j);
           let riga = arrayCartelle[i].map((colonna) => colonna[j]); // OTTENGO LA RIGA
-          console.log(riga + "    : " + extractedNumbers);
+
           let countRiga = 0; //CONTATORE NUMERI USCITI PRESENTI NELLA RIGA DI OGNI TABELLA
           for (let n of extractedNumbers) {
             if (riga.includes(n)) {
@@ -45,7 +45,7 @@ export default function CartelleScreen(props) {
             }
           }
           if (countRiga == 2 && points.ambo == false) {
-            // console.log("AMBOOO!!!!" + points.ambo);
+            console.log("AMBOOO!!!!" + extractedNumbers);
             socket.emit("point", room, "ambo", () => {
               points.ambo = true;
               setPoints(points);
@@ -53,6 +53,7 @@ export default function CartelleScreen(props) {
             });
           }
           if (countRiga == 3 && points.terna == false) {
+            console.log("TERNA!!!!" + extractedNumbers);
             socket.emit("point", room, "terna", () => {
               points.terna = true;
               setPoints(points);
@@ -61,6 +62,7 @@ export default function CartelleScreen(props) {
           }
 
           if (countRiga == 5 && points.cinquina == false) {
+            console.log("Cinquina!!!!" + extractedNumbers);
             socket.emit("point", room, "cinquina", () => {
               points.cinquina = true;
               setPoints(points);
@@ -68,17 +70,17 @@ export default function CartelleScreen(props) {
             });
           }
 
-          console.log("extracted : " + extractedNumbers);
-          console.log("COUNT RIGA" + j + " : " + countRiga);
+          //console.log("extracted : " + extractedNumbers);
+          //console.log("COUNT RIGA" + j + " : " + countRiga);
         }
-        //console.log("COUNT-TOMBOLA: " + countTombola);
+        console.log("COUNT-TOMBOLA: " + countTombola);
         if (countTombola == 15 && points.tombola == false) {
           socket.emit("point", room, "tombola", () => {
-            setPoints({
-              ...points,
-              tombola: true,
-            });
+            points.tombola = true;
+            setPoints(points);
             Alert.alert("HAI FATTO TOMBOLA, BRAVISSIMOOO!");
+            Alert.alert("PARTITA FINITA", "Ritorno alla lobby");
+            props.navigation.navigate("Lobby", { room, numeroCartelle });
           });
         }
       }
@@ -87,14 +89,17 @@ export default function CartelleScreen(props) {
     });
     socket.on("point", (data, username) => {
       console.log(`${username} ha fatto  ${data}`);
-      setPoints({
-        ...points,
-        [data]: true,
-      });
+      points[data] = true;
+      setPoints(points);
       Alert.alert("ATTENZIONE", `${username} ha fatto  ${data}`);
     });
     socket.on("endGame", () => {
-      Alert.alert("PARTITA FINITA");
+      Alert.alert("PARTITA FINITA", "Ritorno alla lobby");
+      props.navigation.navigate("Lobby", {
+        room,
+        numeroCartelle,
+        creator: props.route.params.creator,
+      });
     });
     socket.on("disconnect", () => {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
@@ -111,10 +116,16 @@ export default function CartelleScreen(props) {
   }, []);
   return (
     <View>
-      <View style={Styles.container}>
-        <Text style={Styles.extractedNumber}>{extractedNumber}</Text>
+      <View style={{ ...Styles.container }}>
+        <Text
+          style={{
+            ...Styles.extractedNumber,
+            backgroundColor: theme.colors.primary,
+          }}
+        >
+          {extractedNumber}
+        </Text>
       </View>
-      <Text>{JSON.stringify(points)}</Text>
       <ScrollView horizontal={true}>
         {users.map((user) => (
           <Chip
@@ -126,6 +137,7 @@ export default function CartelleScreen(props) {
             {user.username}
           </Chip>
         ))}
+        <Text>{JSON.stringify(points)}</Text>
       </ScrollView>
       {
         <ScrollView>
@@ -184,10 +196,15 @@ export default function CartelleScreen(props) {
                     extractedNumbers.includes(elemento)
                       ? {
                           ...Styles.cartellaText,
-                          backgroundColor: "red",
-                          color: "white",
+                          backgroundColor: theme.colors.onPrimaryContainer,
+                          borderColor: theme.colors.primaryContainer,
+                          color: theme.colors.primaryContainer,
                         }
-                      : Styles.cartellaText
+                      : {
+                          ...Styles.cartellaText,
+                          borderColor: theme.colors.primaryContainer,
+                          color: "black",
+                        }
                   }
                 >
                   {elemento == -1 ? "    " : elemento}
