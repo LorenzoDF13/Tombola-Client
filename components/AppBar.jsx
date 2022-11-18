@@ -1,10 +1,11 @@
 import { Alert, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Appbar } from "react-native-paper";
 
-export default function AppBar({ back, navigation, route }) {
+export default function AppBar({ back, navigation, route, mute, setMute }) {
+  const [state, setState] = useState(false);
   return (
-    <Appbar.Header elevated>
+    <Appbar.Header statusBarHeight={"0"} elevated>
       {back ? (
         <Appbar.BackAction
           onPress={
@@ -15,14 +16,18 @@ export default function AppBar({ back, navigation, route }) {
         />
       ) : null}
       <Appbar.Content title={route.name} />
-      {/*route.name == "Home" ? (
+      {route.name == "Cartelle" ? (
         <Appbar.Action
-          icon="cog"
-          onPress={() => navigation.navigate("Settings")}
+          icon={state ? "volume-off" : "volume-high"}
+          onPress={() =>
+            state
+              ? (setMute(false), setState(false))
+              : (setMute(true), setState(true))
+          }
         ></Appbar.Action>
       ) : (
         ""
-      )*/}
+      )}
     </Appbar.Header>
   );
   function leaveRoom() {

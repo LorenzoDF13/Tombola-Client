@@ -19,11 +19,9 @@ export default function App() {
             header: (props) => <AppBar {...props} />,
           }}
         >
-          <Stack.Group>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Lobby" component={LobbyScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
-          </Stack.Group>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Lobby" component={LobbyScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="Cartelle" component={CartelleScreen} />
           <Stack.Screen name="Tabellone" component={TabelloneScreen} />
         </Stack.Navigator>

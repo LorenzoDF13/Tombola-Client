@@ -4,6 +4,7 @@ export default StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     flexDirection: "row",
+    marginBottom: 10,
   },
   extractedNumber: {
     textAlign: "center",
@@ -12,7 +13,7 @@ export default StyleSheet.create({
     color: "white",
     padding: 10,
     width: 50,
-    margin: 15,
+    margin: 20,
     marginBottom: 0,
     textAlign: "center",
     borderRadius: 50,
@@ -26,6 +27,5 @@ export default StyleSheet.create({
   cartellaText: {
     borderWidth: 1,
     padding: 10,
-    fontSize: 15,
   },
 });
