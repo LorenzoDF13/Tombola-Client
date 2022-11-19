@@ -32,16 +32,21 @@ export default function CartelleScreen(props) {
     socket.on("point", (data, username) => {
       console.log(`${username} ha fatto  ${data}`);
 
-      setPoints((prev) => ({ ...prev, [data]: true }));
+      setPoints((prev) => ({ ...prev, [data]: username }));
       Alert.alert("ATTENZIONE", `${username} ha fatto  ${data}`);
     });
-    socket.on("endGame", () => {
-      Alert.alert("PARTITA FINITA", "Ritorno alla lobby");
-      props.navigation.navigate("Lobby", {
-        room,
-        numeroCartelle,
-        creator: props.route.params.creator,
-      });
+    socket.on("endGame", (message) => {
+      Alert.alert(
+        "PARTITA FINITA",
+        message + " Ritorno alla lobby in 5 secondi"
+      );
+      setTimeout(() => {
+        props.navigation.navigate("Lobby", {
+          room,
+          numeroCartelle,
+          creator: props.route.params.creator,
+        });
+      }, 5000);
     });
     socket.on("disconnect", () => {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");

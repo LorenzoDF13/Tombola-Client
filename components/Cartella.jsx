@@ -5,7 +5,6 @@ import Styles from "../styles/CartelleScreenStyle";
 import socket from "../utils/socket";
 export default function Cartella({
   extractedNumbers,
-
   points,
   setPoints,
   room,
@@ -139,6 +138,7 @@ export default function Cartella({
     if (selectedNumbers.length == 15) {
       socket.emit("point", room, "tombola", () => {
         Alert.alert("HAI FATTO TOMBOLA, BRAVISSIMOOO!");
+
         socket.emit("endGame", room);
       });
     }
