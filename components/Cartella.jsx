@@ -109,23 +109,23 @@ export default function Cartella({
       }
       if (countRiga == 2 && !points.ambo) {
         console.log("AMBOOO!!!!" + extractedNumbers);
-        socket.emit("point", room, "ambo", () => {
-          setPoints((prev) => ({ ...prev, ambo: true }));
+        socket.emit("point", room, "ambo", (username) => {
+          setPoints((prev) => ({ ...prev, ambo: username }));
           Alert.alert("HAI FATTO AMBO, BRAVO!");
         });
       }
       if (countRiga == 3 && !points.terna) {
         console.log("TERNA!!!!" + extractedNumbers);
-        socket.emit("point", room, "terna", () => {
-          setPoints((prev) => ({ ...prev, terna: true }));
+        socket.emit("point", room, "terna", (username) => {
+          setPoints((prev) => ({ ...prev, terna: username }));
           Alert.alert("HAI FATTO TERNA, BRAVO!");
         });
       }
 
       if (countRiga == 5 && !points.cinquina) {
         console.log("Cinquina!!!!" + extractedNumbers);
-        socket.emit("point", room, "cinquina", () => {
-          setPoints((prev) => ({ ...prev, cinquina: true }));
+        socket.emit("point", room, "cinquina", (username) => {
+          setPoints((prev) => ({ ...prev, cinquina: username }));
           Alert.alert("HAI FATTO CINQUINA, BRAVO!");
         });
       }

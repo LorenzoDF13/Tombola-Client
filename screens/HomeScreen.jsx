@@ -74,26 +74,6 @@ export default function HomeScreen({ navigation, route }) {
           AsyncStorage.setItem("username", t);
         }}
       ></TextInput>
-      {/* <View>
-        <Button
-          disabled={username.length < 1}
-          mode="contained"
-          style={{ margin: 10, marginTop: 30 }}
-          onPress={() => {
-            if (connessione) changePage("CreaPartita");
-          }}
-        >
-          Crea partita
-        </Button>
-        <Button
-          disabled={username.length < 1}
-          mode="contained"
-          style={{ margin: 10 }}
-          onPress={() => changePage("CreaPartita")}
-        >
-          Partecipa
-        </Button>
-      </View> */}
 
       <FAB.Group
         disabled={username.length == 0}
@@ -105,6 +85,7 @@ export default function HomeScreen({ navigation, route }) {
             icon: "plus",
             label: "Crea partita",
             onPress: () => {
+              setFBAOpen(false);
               socket.emit("username", username);
               showModalCreaPartita(true);
             },
@@ -114,6 +95,7 @@ export default function HomeScreen({ navigation, route }) {
             label: "Partecipa",
             onPress: () => {
               socket.emit("username", username);
+              setFBAOpen(false);
               showModalPartecipaPartita(true);
             },
           },

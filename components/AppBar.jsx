@@ -1,9 +1,19 @@
-import { Alert, View } from "react-native";
-import React, { useState } from "react";
+import { Alert, BackHandler, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Appbar } from "react-native-paper";
 import * as Speech from "expo-speech";
 export default function AppBar({ back, navigation, route, mute, setMute }) {
   const [state, setState] = useState(false);
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", function () {
+      console.log(" PREMUTO INDIETRO");
+      if (route.name == "Lobby" || route.name == "Cartelle") {
+        leaveRoom();
+        return true;
+      }
+      return false;
+    });
+  }, []);
   return (
     <Appbar.Header statusBarHeight={0} elevated>
       {back ? (
