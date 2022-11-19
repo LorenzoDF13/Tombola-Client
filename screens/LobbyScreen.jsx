@@ -24,7 +24,6 @@ export default function LobbyScreen({ navigation, route }) {
           }
 
           setUsers(users);
-          console.log(users);
         }
       );
     } else {

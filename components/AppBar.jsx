@@ -1,11 +1,11 @@
 import { Alert, View } from "react-native";
 import React, { useState } from "react";
 import { Appbar } from "react-native-paper";
-
+import * as Speech from "expo-speech";
 export default function AppBar({ back, navigation, route, mute, setMute }) {
   const [state, setState] = useState(false);
   return (
-    <Appbar.Header statusBarHeight={"0"} elevated>
+    <Appbar.Header statusBarHeight={0} elevated>
       {back ? (
         <Appbar.BackAction
           onPress={
@@ -19,11 +19,16 @@ export default function AppBar({ back, navigation, route, mute, setMute }) {
       {route.name == "Cartelle" ? (
         <Appbar.Action
           icon={state ? "volume-off" : "volume-high"}
-          onPress={() =>
-            state
-              ? (setMute(false), setState(false))
-              : (setMute(true), setState(true))
-          }
+          onPress={() => {
+            if (state) {
+              setMute(false);
+              setState(false);
+              Speech.stop();
+            } else {
+              setMute(true);
+              setState(true);
+            }
+          }}
         ></Appbar.Action>
       ) : (
         ""
