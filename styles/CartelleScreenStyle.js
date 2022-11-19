@@ -13,7 +13,7 @@ export default StyleSheet.create({
     color: "white",
     padding: 10,
     width: 50,
-    margin: 20,
+    margin: 15,
     marginBottom: 0,
     textAlign: "center",
     borderRadius: 50,

@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Alert, TouchableOpacity } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import socket from "../utils/socket";
 import Styles from "../styles/CartelleScreenStyle";
-import { Chip, useTheme } from "react-native-paper";
+import { Button, Chip, useTheme } from "react-native-paper";
 
 import ExtractedNumber from "../components/ExtractedNumber";
 import Cartella from "../components/Cartella";
@@ -16,8 +16,10 @@ export default function CartelleScreen(props) {
     ambo: false,
     terna: false,
     cinquina: false,
+    tombola: false,
   });
   const extractedNumbers = useRef([]); // NUMERI ESTRATTI
+  const [check, setCheck] = useState(false);
   const cartelle = Array.from(Array(parseInt(numeroCartelle)), (_, i) => (
     <Cartella
       key={i}
@@ -25,6 +27,7 @@ export default function CartelleScreen(props) {
       points={points}
       extractedNumbers={extractedNumbers}
       setPoints={setPoints}
+      check={check}
     />
   ));
   const [users, setUsers] = useState(props.route.params.users); // UTENTI NELLA STANZA
@@ -60,6 +63,7 @@ export default function CartelleScreen(props) {
       socket.off("disconnect");
       socket.off("pong");
       socket.off("endGame");
+      socket.off("point");
     };
   }, []);
 
@@ -85,6 +89,21 @@ export default function CartelleScreen(props) {
       </View>
       <Text>{JSON.stringify(points)}</Text>
       {<ScrollView>{cartelle.map((c) => c)}</ScrollView>}
+      <View>
+        <Button
+          mode="contained"
+          style={{ margin: 15 }}
+          onPress={() => {
+            console.log("PREMUTO");
+            setCheck(!check);
+          }}
+        >
+          {"Proponi " + getKeyByValue(points, false)}
+        </Button>
+      </View>
     </View>
   );
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find((key) => object[key] === value);
+  }
 }

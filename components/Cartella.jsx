@@ -8,13 +8,15 @@ export default function Cartella({
   points,
   setPoints,
   room,
+  check,
 }) {
   const theme = useTheme();
   const [cartella, setCartella] = useState(GeneraCartella());
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   useEffect(() => {
+    console.log("Controllo punto");
     checkPoint();
-  }, [selectedNumbers]);
+  }, [check]);
   return (
     <View>
       <View style={Styles.cartella} key={Math.random() * 1000}>
@@ -99,48 +101,43 @@ export default function Cartella({
   }
   function checkPoint() {
     //CHECK IF THERE IS A POINT
+    let pointDone = false; // IF ALREADY SCORED THE POINT
+    const ObjectPoints = {
+      2: "ambo",
+      3: "terna",
+      5: "cinquina",
+    }; //MAPPING NUMBERS TO POINTS
     for (let i = 0; i < 3; i++) {
       let riga = cartella.map((colonna) => colonna[i]); // OTTENGO LA RIGA
       let countRiga = 0; //CONTATORE NUMERI USCITI PRESENTI NELLA RIGA DI OGNI TABELLA
       for (let n of selectedNumbers) {
         if (riga.includes(n)) {
           countRiga++;
+          let p = ObjectPoints[countRiga]; // PUNTO CONTATO CON COUNT RIGA
+          let pToDo = getKeyByValue(points, false); // PUNTO DA FARE
+          if (p == pToDo && !points[p] && !pointDone) {
+            pointDone = true;
+            console.log(p + " !!!!! " + extractedNumbers);
+            socket.emit("point", room, p, (username) => {
+              setPoints((prev) => ({ ...prev, [p]: username }));
+              Alert.alert(`Hai Fatto ${p}, Bravo!`);
+            });
+            break;
+          }
         }
+        if (pointDone) break;
       }
-      if (countRiga == 2 && !points.ambo) {
-        console.log("AMBOOO!!!!" + extractedNumbers);
-        socket.emit("point", room, "ambo", (username) => {
-          setPoints((prev) => ({ ...prev, ambo: username }));
-          Alert.alert("HAI FATTO AMBO, BRAVO!");
-        });
-      }
-      if (countRiga == 3 && !points.terna) {
-        console.log("TERNA!!!!" + extractedNumbers);
-        socket.emit("point", room, "terna", (username) => {
-          setPoints((prev) => ({ ...prev, terna: username }));
-          Alert.alert("HAI FATTO TERNA, BRAVO!");
-        });
-      }
-
-      if (countRiga == 5 && !points.cinquina) {
-        console.log("Cinquina!!!!" + extractedNumbers);
-        socket.emit("point", room, "cinquina", (username) => {
-          setPoints((prev) => ({ ...prev, cinquina: username }));
-          Alert.alert("HAI FATTO CINQUINA, BRAVO!");
-        });
-      }
-
-      //console.log("extracted : " + extractedNumbers);
-      //console.log("COUNT RIGA" + j + " : " + countRiga);
     }
     console.log("COUNT-TOMBOLA: " + selectedNumbers.length);
 
     if (selectedNumbers.length == 15) {
       socket.emit("point", room, "tombola", () => {
         Alert.alert("HAI FATTO TOMBOLA, BRAVISSIMOOO!");
-
         socket.emit("endGame", room);
       });
     }
+  }
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find((key) => object[key] === value);
   }
 }

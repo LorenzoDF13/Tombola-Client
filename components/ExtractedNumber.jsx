@@ -15,6 +15,9 @@ export default function ExtractedNumber({ navigation, extractedNumbers }) {
     socket.on("extractedNumber", (number) => {
       setNumber(number);
     });
+    return () => {
+      socket.off("extractedNumber");
+    };
   }, []);
   useEffect(() => {
     extractedNumbers.current.push(number);
@@ -34,14 +37,18 @@ export default function ExtractedNumber({ navigation, extractedNumbers }) {
           ...Styles.container,
         }}
       >
-        <Text
-          style={{
-            ...Styles.extractedNumber,
-            backgroundColor: theme.colors.primary,
-          }}
-        >
-          {number}
-        </Text>
+        {number != "" ? (
+          <Text
+            style={{
+              ...Styles.extractedNumber,
+              backgroundColor: theme.colors.primary,
+            }}
+          >
+            {number}
+          </Text>
+        ) : (
+          ""
+        )}
       </View>
     </View>
   );
