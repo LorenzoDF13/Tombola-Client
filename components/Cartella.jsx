@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "react-native-paper";
 import Styles from "../styles/CartelleScreenStyle";
 import socket from "../utils/socket";
+import CartellaCell from "./CartellaCell";
 export default function Cartella({
   extractedNumbers,
   points,
@@ -12,7 +13,7 @@ export default function Cartella({
 }) {
   const theme = useTheme();
   const [cartella, setCartella] = useState(GeneraCartella());
-  const [selectedNumbers, setSelectedNumbers] = useState([]);
+  const selectedNumbers = useRef([]);
   useEffect(() => {
     console.log("Controllo punto");
     checkPoint();
@@ -27,38 +28,11 @@ export default function Cartella({
               key={Math.random() * 1000}
             >
               {colonna.map((elemento, j) => (
-                <TouchableOpacity
-                  key={(i + 1) * j}
-                  onPress={() => {
-                    if (
-                      extractedNumbers.current.includes(elemento) &&
-                      !selectedNumbers.includes(elemento)
-                    ) {
-                      setSelectedNumbers((prev) => [
-                        ...selectedNumbers,
-                        elemento,
-                      ]);
-                    }
-                  }}
-                  style={
-                    selectedNumbers.includes(elemento)
-                      ? {
-                          ...Styles.cartellaText,
-                          backgroundColor: theme.colors.primaryContainer,
-                          borderColor: theme.colors.primaryContainer,
-                          color: theme.colors.primaryContainer,
-                        }
-                      : {
-                          ...Styles.cartellaText,
-                          borderColor: theme.colors.primaryContainer,
-                          color: "black",
-                        }
-                  }
-                >
-                  <Text style={{ color: theme.colors.onBackground }}>
-                    {elemento == -1 ? "    " : elemento}
-                  </Text>
-                </TouchableOpacity>
+                <CartellaCell
+                  extractedNumbers={extractedNumbers}
+                  selectedNumbers={selectedNumbers}
+                  value={elemento}
+                />
               ))}
             </View>
           );
@@ -110,7 +84,7 @@ export default function Cartella({
     for (let i = 0; i < 3; i++) {
       let riga = cartella.map((colonna) => colonna[i]); // OTTENGO LA RIGA
       let countRiga = 0; //CONTATORE NUMERI USCITI PRESENTI NELLA RIGA DI OGNI TABELLA
-      for (let n of selectedNumbers) {
+      for (let n of selectedNumbers.current) {
         if (riga.includes(n)) {
           countRiga++;
           let p = ObjectPoints[countRiga]; // PUNTO CONTATO CON COUNT RIGA
@@ -128,9 +102,9 @@ export default function Cartella({
         if (pointDone) break;
       }
     }
-    console.log("COUNT-TOMBOLA: " + selectedNumbers.length);
+    console.log("COUNT-TOMBOLA: " + selectedNumbers.current.length);
 
-    if (selectedNumbers.length == 15) {
+    if (selectedNumbers.current.length == 15) {
       socket.emit("point", room, "tombola", () => {
         Alert.alert("HAI FATTO TOMBOLA, BRAVISSIMOOO!");
         socket.emit("endGame", room);
