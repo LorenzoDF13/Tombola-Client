@@ -2,6 +2,7 @@ import { Alert, ScrollView, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Chip, Text, useTheme } from "react-native-paper";
 import socket from "../utils/socket";
+import Avatar from "../components/Avatar";
 
 export default function LobbyScreen({ navigation, route }) {
   const theme = useTheme();
@@ -63,7 +64,11 @@ export default function LobbyScreen({ navigation, route }) {
       </View>
       <ScrollView style={{ margin: 10 }}>
         {users.map((user, i) => (
-          <Chip key={i} style={{ padding: 10, margin: 5 }} icon="account">
+          <Chip
+            key={i}
+            style={{ padding: 10, margin: 5 }}
+            avatar={<Avatar text={user.username} />}
+          >
             {user.username}
           </Chip>
         ))}

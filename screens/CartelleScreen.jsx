@@ -6,6 +6,7 @@ import { Button, Chip, useTheme } from "react-native-paper";
 
 import ExtractedNumber from "../components/ExtractedNumber";
 import Cartella from "../components/Cartella";
+import Avatar from "../components/Avatar";
 export default function CartelleScreen(props) {
   const theme = useTheme();
   //PARAMETRI
@@ -81,7 +82,7 @@ export default function CartelleScreen(props) {
           {users.map((user) => (
             <Chip
               key={user.username || Math.random() * 9999}
-              icon="account"
+              avatar={<Avatar text={user.username} />}
               style={{ marginLeft: 5, marginRigth: 5 }}
             >
               {user.username}

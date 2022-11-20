@@ -11,17 +11,12 @@ import {
   useTheme,
 } from "react-native-paper";
 
-export default function CreaPartitaModal({
-  socket,
-  visible,
-  setVisible,
-  navigation,
-}) {
+export default function CreaPartitaModal({ visible, setVisible, navigation }) {
   const [checked, setChecked] = useState("2");
   const [room, setRoom] = useState("");
   const [tabelloneAutomatico, setTabelloneAutomatico] = useState(true);
   const [mode, setMode] = useState("normale"); // MODALITA NORMALE DIFFICILE DIFFICILISSIMA
-  console.log(mode);
+
   const theme = useTheme();
   return (
     <Portal>
