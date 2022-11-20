@@ -90,7 +90,24 @@ export default function CartelleScreen(props) {
           ))}
         </ScrollView>
       </View>
-      <Text>{JSON.stringify(points)}</Text>
+      <View style={{ height: 35, marginTop: 5 }}>
+        <ScrollView horizontal={true}>
+          {Object.entries(points).map((point) =>
+            point[1] != false ? (
+              <Chip
+                key={point[0]}
+                style={{ marginLeft: 5, marginRigth: 5 }}
+                mode="outlined"
+              >
+                {point[0] + ": " + point[1]}
+              </Chip>
+            ) : (
+              ""
+            )
+          )}
+        </ScrollView>
+      </View>
+      {}
       {<ScrollView>{cartelle.map((c) => c)}</ScrollView>}
       <View>
         <Button

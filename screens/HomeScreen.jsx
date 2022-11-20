@@ -6,6 +6,7 @@ import {
   useTheme,
   FAB,
   Portal,
+  Banner,
 } from "react-native-paper";
 import React, { useEffect, useState } from "react";
 import socket from "../utils/socket";
@@ -25,11 +26,7 @@ export default function HomeScreen({ navigation, route }) {
   }
   useEffect(() => {
     loadUsername();
-    if (route.params?.isLeaving) {
-      socket.emit("leaveRoom", route.params.room);
-      console.log("Leaved room " + route.params.room);
-      route.params.isLeaving = false;
-    }
+
     socket.on("connect", () => {
       setConnessione(true);
       setConnectionError(false);
@@ -47,12 +44,30 @@ export default function HomeScreen({ navigation, route }) {
       socket.off("disconnect");
       socket.off("pong");
     };
+  }, []);
+  useEffect(() => {
+    if (route.params?.isLeaving) {
+      socket.emit("leaveRoom", route.params.room);
+      console.log("Leaved room " + route.params.room);
+      route.params.isLeaving = false;
+    }
   }, [route.params]);
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
-      <Text>
-        {connessione ? "CONNESSO" : "NON CONNESSO " + connectionError}
-      </Text>
+      <Banner
+        visible={connectionError}
+        icon="web-off"
+        actions={[
+          {
+            label: "Riprova",
+            onPress: () => {
+              socket.connect();
+            },
+          },
+        ]}
+      >
+        Impossibile connettersi al Server {connectionError.toString()}
+      </Banner>
       <View style={{ justifyContent: "center", flexDirection: "row" }}>
         <Text variant="headlineLarge" style={{ margin: 10 }}>
           Benvenuto
