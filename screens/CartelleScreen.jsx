@@ -19,7 +19,8 @@ export default function CartelleScreen(props) {
     tombola: false,
   });
   const extractedNumbers = useRef([]); // NUMERI ESTRATTI
-  const [check, setCheck] = useState(false);
+  const [check, setCheck] = useState(false); // CONTROLLO PUNTI
+  const [disabled, setDisabled] = useState(false);
   const cartelle = Array.from(Array(parseInt(numeroCartelle)), (_, i) => (
     <Cartella
       key={i}
@@ -39,9 +40,10 @@ export default function CartelleScreen(props) {
       Alert.alert("ATTENZIONE", `${username} ha fatto  ${data}`);
     });
     socket.on("endGame", (message) => {
+      setDisabled(true);
       Alert.alert(
         "PARTITA FINITA",
-        message + " Ritorno alla lobby in 5 secondi"
+        message + " ritorno alla lobby in 5 secondi"
       );
       setTimeout(() => {
         props.navigation.navigate("Lobby", {
@@ -91,10 +93,10 @@ export default function CartelleScreen(props) {
       {<ScrollView>{cartelle.map((c) => c)}</ScrollView>}
       <View>
         <Button
+          disabled={disabled}
           mode="contained"
           style={{ margin: 15 }}
           onPress={() => {
-            console.log("PREMUTO");
             setCheck(!check);
           }}
         >

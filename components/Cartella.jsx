@@ -29,6 +29,7 @@ export default function Cartella({
             >
               {colonna.map((elemento, j) => (
                 <CartellaCell
+                  key={i * j + Math.random() * 1000}
                   extractedNumbers={extractedNumbers}
                   selectedNumbers={selectedNumbers}
                   value={elemento}

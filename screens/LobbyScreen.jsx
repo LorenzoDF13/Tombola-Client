@@ -7,7 +7,7 @@ export default function LobbyScreen({ navigation, route }) {
   const theme = useTheme();
   const room = route.params.room;
   const creator = route.params.creator;
-
+  const mode = route.params.mode;
   const numeroCartelle = route.params.numeroCartelle;
   const tabelloneAutomatico = route.params.tabelloneAutomatico;
   let [users, setUsers] = useState([]);
@@ -15,7 +15,7 @@ export default function LobbyScreen({ navigation, route }) {
     if (creator) {
       socket.emit(
         "createRoom",
-        { room, numeroCartelle, tabelloneAutomatico },
+        { room, numeroCartelle, tabelloneAutomatico, mode },
         (alreadyExist, users) => {
           if (alreadyExist) {
             Alert.alert("ATTENZIONE", "PARTITA GIA ESISTENTE");

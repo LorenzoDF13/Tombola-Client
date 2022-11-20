@@ -20,6 +20,8 @@ export default function CreaPartitaModal({
   const [checked, setChecked] = useState("2");
   const [room, setRoom] = useState("");
   const [tabelloneAutomatico, setTabelloneAutomatico] = useState(true);
+  const [mode, setMode] = useState("normale"); // MODALITA NORMALE DIFFICILE DIFFICILISSIMA
+  console.log(mode);
   const theme = useTheme();
   return (
     <Portal>
@@ -39,6 +41,7 @@ export default function CreaPartitaModal({
             alignItems: "center",
             justifyContent: "space-between",
             margin: 10,
+            marginBottom: 5,
           }}
         >
           <Text variant="bodyLarge">Tabellone automatico</Text>
@@ -54,10 +57,29 @@ export default function CreaPartitaModal({
         >
           <RadioButton.Item value="2" label="2 cartelle" />
           <RadioButton.Item value="3" label="3 cartelle" />
+          <RadioButton.Item value="4" label="4 cartelle" />
+        </RadioButton.Group>
+        <Text
+          style={{
+            marginLeft: 15,
+            marginRight: 15,
+            marginTop: 5,
+            marginBottom: 5,
+          }}
+          variant="titleMedium"
+        >
+          Modalita:
+        </Text>
+        <RadioButton.Group
+          onValueChange={(value) => setMode(value)}
+          value={mode}
+        >
+          <RadioButton.Item value="normale" label="Normale" />
+          <RadioButton.Item value="difficile" label="Difficile" />
           <RadioButton.Item
-            value="4"
-            label="4 cartelle"
-            style={{ marginBottom: 20 }}
+            value="difficilissimo"
+            label="Difficilissimo"
+            style={{ marginBottom: 10 }}
           />
         </RadioButton.Group>
         <FAB
@@ -72,6 +94,7 @@ export default function CreaPartitaModal({
               numeroCartelle: checked,
               tabelloneAutomatico,
               creator: true,
+              mode,
             });
           }}
         />

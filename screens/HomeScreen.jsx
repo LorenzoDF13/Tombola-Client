@@ -19,6 +19,7 @@ export default function HomeScreen({ navigation, route }) {
   const [FBAopen, setFBAOpen] = useState(false); //FBA BUTTON
   const [modalCreaPartita, showModalCreaPartita] = useState(false); //MODAL PER CREARE PARTITA
   const [modalPartecipaPartita, showModalPartecipaPartita] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   async function loadUsername() {
     setUsername((await AsyncStorage.getItem("username")) || "");
   }
@@ -31,13 +32,15 @@ export default function HomeScreen({ navigation, route }) {
     }
     socket.on("connect", () => {
       setConnessione(true);
+      setConnectionError(false);
     });
     socket.on("disconnect", () => {
       setConnessione(false);
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
     });
     socket.io.on("error", (err) => {
-      Alert.alert("ATTENZIONE", "ERRORE DI CONNESSIONE");
+      navigation.navigate("Home");
+      setConnectionError(err);
     });
     return () => {
       socket.off("connect");
@@ -47,7 +50,9 @@ export default function HomeScreen({ navigation, route }) {
   }, [route.params]);
   return (
     <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
-      <Text>{connessione ? "CONNESSO" : "NON CONNESSO"}</Text>
+      <Text>
+        {connessione ? "CONNESSO" : "NON CONNESSO " + connectionError}
+      </Text>
       <View style={{ justifyContent: "center", flexDirection: "row" }}>
         <Text variant="headlineLarge" style={{ margin: 10 }}>
           Benvenuto
@@ -85,18 +90,22 @@ export default function HomeScreen({ navigation, route }) {
             icon: "plus",
             label: "Crea partita",
             onPress: () => {
-              setFBAOpen(false);
-              socket.emit("username", username);
-              showModalCreaPartita(true);
+              if (!connectionError) {
+                setFBAOpen(false);
+                socket.emit("username", username);
+                showModalCreaPartita(true);
+              }
             },
           },
           {
             icon: "star",
             label: "Partecipa",
             onPress: () => {
-              socket.emit("username", username);
-              setFBAOpen(false);
-              showModalPartecipaPartita(true);
+              if (!connectionError) {
+                socket.emit("username", username);
+                setFBAOpen(false);
+                showModalPartecipaPartita(true);
+              }
             },
           },
         ]}
