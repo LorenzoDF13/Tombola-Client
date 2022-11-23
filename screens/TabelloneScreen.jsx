@@ -1,11 +1,14 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import socket from "../utils/socket";
 import Styles from "../styles/TabelloneScreenStyle";
+import { useTheme } from "react-native-paper";
+import CartellaTabellone from "../components/CartellaTabellone";
 export default function TabelloneScreen(props) {
+  const theme = useTheme();
   const room = props.route.params.room;
   const [numero, setNumero] = useState("");
-  const [extractedNumbers, setExtractedNumbers] = useState([]);
+  const [extractedNumbers, setExtractedNumbers] = useRef([]);
   useEffect(() => {
     socket.on("disconnect", () => {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
@@ -21,7 +24,7 @@ export default function TabelloneScreen(props) {
     };
   }, []);
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View
         style={{
           textAlign: "center",
@@ -36,20 +39,12 @@ export default function TabelloneScreen(props) {
         <Text style={Styles.text}>ESTRAI NUMERO </Text>
       </TouchableOpacity>
       <View style={Styles.container}>
-        {generateTabellone().map((item) => {
-          return item.map((i) => (
-            <Text
-              style={
-                extractedNumbers.includes(i)
-                  ? { ...Styles.item, backgroundColor: "red", color: "white" }
-                  : Styles.item
-              }
-              key={i}
-            >
-              {i}
-            </Text>
-          ));
-        })}
+        {Array.from(Array(6), (_, i) => (
+          <CartellaTabellone
+            extractedNumbers={extractedNumbers}
+            firstValue={i % 2 == 0 ? i * 5 + 21 : i * 5 + 1}
+          />
+        ))}
       </View>
     </View>
   );
@@ -70,13 +65,11 @@ export default function TabelloneScreen(props) {
       var extractedNumber = Math.floor(Math.random() * 90 + 1);
       while (extractedNumbers.includes(extractedNumber))
         extractedNumber = Math.floor(Math.random() * 90 + 1);
-      setExtractedNumbers([...extractedNumbers, extractedNumber]);
+      extractedNumber.current.push(extractedNumber);
       socket.emit("extractedNumber", room, extractedNumber);
       setNumero(extractedNumber);
     } else {
       Alert.alert("Partita finita");
-      setExtractedNumbers([]);
-      setNumero("");
     }
   }
 }
