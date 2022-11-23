@@ -21,7 +21,7 @@ export default function CartelleScreen(props) {
   });
   const extractedNumbers = useRef([]); // NUMERI ESTRATTI
   const [check, setCheck] = useState(false); // CONTROLLO PUNTI
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(false); //DISABLE BUTTON AT THE END OF THE GAME
   const cartelle = Array.from(Array(parseInt(numeroCartelle)), (_, i) => (
     <Cartella
       key={i}

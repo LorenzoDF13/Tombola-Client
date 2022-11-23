@@ -5,14 +5,18 @@ import * as Speech from "expo-speech";
 export default function AppBar({ back, navigation, route, mute, setMute }) {
   const [state, setState] = useState(false);
   useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", function () {
-      console.log(" PREMUTO INDIETRO");
-      if (route.name == "Lobby" || route.name == "Cartelle") {
-        leaveRoom();
-        return true;
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      function () {
+        console.log(" PREMUTO INDIETRO");
+        if (route.name == "Lobby" || route.name == "Cartelle") {
+          leaveRoom();
+          return true;
+        }
+        return false;
       }
-      return false;
-    });
+    );
+    return () => backHandler.remove();
   }, []);
   return (
     <Appbar.Header statusBarHeight={0} elevated>

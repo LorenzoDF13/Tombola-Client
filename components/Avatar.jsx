@@ -4,7 +4,7 @@ import { Avatar } from "react-native-paper";
 export default function Avatarr({ text }) {
   const [realText, setRealText] = useState();
   useEffect(() => {
-    console.log(text + " MATCHES " + text?.match(/[A-Z]/g) + " AVATAR");
+    // console.log(text + " MATCHES " + text?.match(/[A-Z]/g) + " AVATAR");
     let letters = text?.match(/[A-Z]/g);
 
     if (letters.length < 2) {

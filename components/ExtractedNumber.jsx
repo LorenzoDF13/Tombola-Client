@@ -27,6 +27,8 @@ export default function ExtractedNumber({ navigation, extractedNumbers }) {
         pitch: 0.5,
         rate: 0.1,
       });
+    } else {
+      Speech.stop();
     }
   }, [number]);
   const theme = useTheme();
