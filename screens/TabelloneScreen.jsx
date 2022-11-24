@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import socket from "../utils/socket";
 import Styles from "../styles/TabelloneScreenStyle";
@@ -8,7 +8,14 @@ export default function TabelloneScreen(props) {
   const theme = useTheme();
   const room = props.route.params.room;
   const [numero, setNumero] = useState("");
-  const [extractedNumbers, setExtractedNumbers] = useRef([]);
+  const extractedNumbers = useRef([]);
+  const cartelleFirstValue = useRef(0); // PRIMO VALONE DELLE CARTELLE
+  const [points, setPoints] = useState({
+    ambo: false,
+    terna: false,
+    cinquina: false,
+    tombola: false,
+  });
   useEffect(() => {
     socket.on("disconnect", () => {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
@@ -16,6 +23,8 @@ export default function TabelloneScreen(props) {
     });
     socket.on("point", (data, username) => {
       Alert.alert("ATTENZIONE", `${username} ha fatto  ${data}`);
+      points[data] = true;
+      setPoints(points);
     });
     return () => {
       socket.off("connect");
@@ -38,38 +47,27 @@ export default function TabelloneScreen(props) {
       <TouchableOpacity style={Styles.button} onPress={estraiNumero}>
         <Text style={Styles.text}>ESTRAI NUMERO </Text>
       </TouchableOpacity>
-      <View style={Styles.container}>
-        {Array.from(Array(6), (_, i) => (
-          <CartellaTabellone
-            extractedNumbers={extractedNumbers}
-            firstValue={i % 2 == 0 ? i * 5 + 21 : i * 5 + 1}
-          />
-        ))}
-      </View>
+      <ScrollView horizontal contentOffset={{ x: 25, y: 0 }}>
+        <View style={Styles.container}>
+          {Array.from(Array(3), (_, i) => {
+            if (i > 0) cartelleFirstValue.current += 25;
+            return (
+              <View style={{ flexDirection: "row" }}>
+                {Array.from(Array(2), (_, j) => {
+                  if (j > 0) cartelleFirstValue.current += 5;
+                  return (
+                    <CartellaTabellone
+                      key={(i + 1) * j + 7686}
+                      extractedNumbers={extractedNumbers}
+                      firstValue={cartelleFirstValue.current}
+                    />
+                  );
+                })}
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
     </View>
   );
-  function generateTabellone() {
-    var index = 1;
-    var tabellone = [];
-    for (let i = 1; i <= 10; i++) {
-      tabellone[i] = [];
-      for (let j = 1; j <= 9; j++) {
-        tabellone[i][j] = index;
-        index++;
-      }
-    }
-    return tabellone;
-  }
-  function estraiNumero() {
-    if (extractedNumbers.length < 90) {
-      var extractedNumber = Math.floor(Math.random() * 90 + 1);
-      while (extractedNumbers.includes(extractedNumber))
-        extractedNumber = Math.floor(Math.random() * 90 + 1);
-      extractedNumber.current.push(extractedNumber);
-      socket.emit("extractedNumber", room, extractedNumber);
-      setNumero(extractedNumber);
-    } else {
-      Alert.alert("Partita finita");
-    }
-  }
 }
