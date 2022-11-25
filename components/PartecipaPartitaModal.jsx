@@ -15,7 +15,7 @@ export default function PartecipaPartitaModal({
           <Dialog visible={visible} onDismiss={() => setVisible(false)}>
             <Dialog.Title>Partecipa</Dialog.Title>
             <Dialog.Content>
-              <TextInput label={"Stanza"} onChangeText={setRoom} />
+              <TextInput label={"Nome partita"} onChangeText={setRoom} />
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={() => setVisible(false)}>cancel</Button>

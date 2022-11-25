@@ -26,7 +26,7 @@ export default function CreaPartitaModal({ visible, setVisible, navigation }) {
     <Portal>
       <Dialog visible={visible} onDismiss={() => setVisible(false)}>
         <Dialog.Content>
-          <TextInput label="Stanza" onChangeText={setRoom} />
+          <TextInput label="Nome partita" onChangeText={setRoom} />
           <View
             style={{
               flexDirection: "row",

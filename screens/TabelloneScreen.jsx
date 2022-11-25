@@ -4,6 +4,8 @@ import socket from "../utils/socket";
 import Styles from "../styles/TabelloneScreenStyle";
 import { useTheme } from "react-native-paper";
 import CartellaTabellone from "../components/CartellaTabellone";
+import ExtractNumberTabellone from "../components/ExtractNumberTabellone";
+import ReactNativeZoomableView from "@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView";
 export default function TabelloneScreen(props) {
   const theme = useTheme();
   const room = props.route.params.room;
@@ -17,6 +19,10 @@ export default function TabelloneScreen(props) {
     tombola: false,
   });
   useEffect(() => {
+    /*Alert.alert(
+      "Info",
+      "Puoi utilizzare due dita per muovere e zoomare il tabellone"
+    );*/
     socket.on("disconnect", () => {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
       props.navigation.navigate("Home");
@@ -41,13 +47,10 @@ export default function TabelloneScreen(props) {
           justifyContent: "center",
         }}
       >
-        <Text style={Styles.extractedNumber}>{numero}</Text>
+        <ExtractNumberTabellone extractedNumbers={extractedNumbers} />
       </View>
 
-      <TouchableOpacity style={Styles.button} onPress={estraiNumero}>
-        <Text style={Styles.text}>ESTRAI NUMERO </Text>
-      </TouchableOpacity>
-      <ScrollView horizontal contentOffset={{ x: 25, y: 0 }}>
+      <ReactNativeZoomableView>
         <View style={Styles.container}>
           {Array.from(Array(3), (_, i) => {
             if (i > 0) cartelleFirstValue.current += 25;
@@ -67,7 +70,7 @@ export default function TabelloneScreen(props) {
             );
           })}
         </View>
-      </ScrollView>
+      </ReactNativeZoomableView>
     </View>
   );
 }

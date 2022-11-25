@@ -6,6 +6,7 @@ export default function CartellaCell({
   extractedNumbers,
   selectedNumbers,
   value,
+  tabellone,
 }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(false);
@@ -29,16 +30,18 @@ export default function CartellaCell({
                 backgroundColor: theme.colors.primaryContainer,
                 borderColor: theme.colors.primaryContainer,
                 color: theme.colors.primaryContainer,
+                padding: tabellone ? 8 : 10,
               }
             : {
                 ...Styles.cartellaText,
                 borderColor: theme.colors.primaryContainer,
                 color: "black",
+                padding: tabellone ? 8 : 10,
               }
         }
       >
         <Text style={{ color: theme.colors.onBackground }}>
-          {value == -1 ? "    " : value}
+          {value == -1 ? "    " : value < 10 ? "0" + value : value}
         </Text>
       </TouchableOpacity>
     </View>

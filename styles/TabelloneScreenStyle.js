@@ -12,12 +12,10 @@ export default StyleSheet.create({
     height: 33,
   },
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
+
     margin: 5,
     marginTop: 20,
-    justifyContent: "center",
-    alignContent: "center",
   },
   button: {
     backgroundColor: "red",

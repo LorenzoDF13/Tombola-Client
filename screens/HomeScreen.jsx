@@ -47,7 +47,7 @@ export default function HomeScreen({ navigation, route }) {
   }, []);
   useEffect(() => {
     if (route.params?.isLeaving) {
-      socket.emit("leaveRoom", route.params.room);
+      socket.emit("leaveRoom");
       console.log("Leaved room " + route.params.room);
       route.params.isLeaving = false;
     }

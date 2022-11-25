@@ -93,7 +93,7 @@ export default function LobbyScreen({ navigation, route }) {
           </Chip>
         ))}
       </ScrollView>
-      <Text>{isTabellone ? "TRUE" : "False"}</Text>
+
       <View>
         {!tabelloneAutomatico && (
           <Button
@@ -101,6 +101,13 @@ export default function LobbyScreen({ navigation, route }) {
             mode="contained-tonal"
             disabled={tabelloneUsername}
             onPress={() => {
+              if (users.length < 2) {
+                Alert.alert(
+                  "ATTENZIONE",
+                  "Prima di scegliere il tabellone attendi gli altri giocatori"
+                );
+                return;
+              }
               socket.emit("chooseTabellone", room, (username) => {
                 setIsTabellone(true);
                 setTabelloneUsername(username);

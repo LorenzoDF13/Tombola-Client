@@ -23,7 +23,9 @@ export default function AppBar({ back, navigation, route, mute, setMute }) {
       {back ? (
         <Appbar.BackAction
           onPress={
-            route.name == "Lobby" || route.name == "Cartelle"
+            route.name == "Lobby" ||
+            route.name == "Cartelle" ||
+            route.name == "Tabellone"
               ? leaveRoom
               : navigation.goBack
           }

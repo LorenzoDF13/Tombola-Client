@@ -28,7 +28,7 @@ export default function ExtractedNumber({ navigation, extractedNumbers }) {
         rate: 0.1,
       });
     } else {
-      Speech.stop();
+      Speech.stop().then(() => console.log("AUDIO STOPPATO"));
     }
   }, [number]);
   const theme = useTheme();
