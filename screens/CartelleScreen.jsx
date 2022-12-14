@@ -6,7 +6,8 @@ import { Button, Chip, useTheme } from "react-native-paper";
 
 import ExtractedNumber from "../components/ExtractedNumber";
 import Cartella from "../components/Cartella";
-import Avatar from "../components/Avatar";
+import Users from "../components/Users";
+import Points from "../components/Points";
 export default function CartelleScreen(props) {
   const theme = useTheme();
   //PARAMETRI
@@ -32,7 +33,7 @@ export default function CartelleScreen(props) {
       check={check}
     />
   ));
-  const [users, setUsers] = useState(props.route.params.users); // UTENTI NELLA STANZA
+
   useEffect(() => {
     socket.on("point", (data, username) => {
       console.log(`${username} ha fatto  ${data}`);
@@ -58,9 +59,7 @@ export default function CartelleScreen(props) {
       Alert.alert("ATTENZIONE", "SEI STATO DISCONNESSO");
       props.navigation.navigate("Home");
     });
-    socket.on("roomChange", (users) => {
-      setUsers(users);
-    });
+
     return () => {
       socket.off("connect");
       socket.off("disconnect");
@@ -78,36 +77,12 @@ export default function CartelleScreen(props) {
       />
 
       <View>
-        <ScrollView horizontal={true}>
-          {users.map((user) => (
-            <Chip
-              key={user.username || Math.random() * 9999}
-              avatar={<Avatar text={user.username} />}
-              style={{ marginLeft: 5, marginRigth: 5 }}
-            >
-              {user.username}
-            </Chip>
-          ))}
-        </ScrollView>
+        <Users users={props.route.params.users} />
       </View>
       <View style={{ height: 35, marginTop: 5 }}>
-        <ScrollView horizontal={true}>
-          {Object.entries(points).map((point) =>
-            point[1] != false ? (
-              <Chip
-                key={point[0]}
-                style={{ marginLeft: 5, marginRigth: 5 }}
-                mode="outlined"
-              >
-                {point[0] + ": " + point[1]}
-              </Chip>
-            ) : (
-              ""
-            )
-          )}
-        </ScrollView>
+        <Points points={points} />
       </View>
-      {}
+
       {<ScrollView>{cartelle.map((c) => c)}</ScrollView>}
       <View>
         <Button

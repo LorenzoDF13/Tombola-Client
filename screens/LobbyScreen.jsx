@@ -101,13 +101,13 @@ export default function LobbyScreen({ navigation, route }) {
             mode="contained-tonal"
             disabled={tabelloneUsername}
             onPress={() => {
-              if (users.length < 2) {
+              /*  TODO if (users.length < 2) {
                 Alert.alert(
                   "ATTENZIONE",
                   "Prima di scegliere il tabellone attendi gli altri giocatori"
                 );
                 return;
-              }
+              } */
               socket.emit("chooseTabellone", room, (username) => {
                 setIsTabellone(true);
                 setTabelloneUsername(username);
@@ -123,10 +123,10 @@ export default function LobbyScreen({ navigation, route }) {
           style={{ margin: 10 }}
           mode="contained"
           onPress={() => {
-            if (users.length < 2) {
+            /* TODO if (users.length < 2) {
               Alert.alert("ATTENZIONE", "Minimo due giocatori necessari");
               return;
-            }
+            } */
             if (!tabelloneAutomatico && !tabelloneUsername) {
               Alert.alert(
                 "ATTENZIONE",
@@ -136,7 +136,12 @@ export default function LobbyScreen({ navigation, route }) {
             }
             socket.emit("startGame", room);
             if (isTabellone)
-              navigation.navigate("Tabellone", { numeroCartelle, users, room });
+              navigation.navigate("Tabellone", {
+                numeroCartelle,
+                users,
+                room,
+                users,
+              });
             else
               navigation.navigate("Cartelle", {
                 numeroCartelle,

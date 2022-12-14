@@ -15,7 +15,6 @@ export default function Cartella({
   const [cartella, setCartella] = useState(GeneraCartella());
   const selectedNumbers = useRef([]);
   useEffect(() => {
-    console.log("Controllo punto");
     checkPoint();
   }, [check]);
   return (
@@ -93,7 +92,7 @@ export default function Cartella({
           if (p == pToDo && !points[p] && !pointDone) {
             pointDone = true;
             console.log(p + " !!!!! " + extractedNumbers);
-            socket.emit("point", room, p, (username) => {
+            socket.emit("point", p, (username) => {
               setPoints((prev) => ({ ...prev, [p]: username }));
               Alert.alert(`Hai Fatto ${p}, Bravo!`);
             });
@@ -106,9 +105,8 @@ export default function Cartella({
     console.log("COUNT-TOMBOLA: " + selectedNumbers.current.length);
 
     if (selectedNumbers.current.length == 15) {
-      socket.emit("point", room, "tombola", () => {
+      socket.emit("point", "tombola", () => {
         Alert.alert("HAI FATTO TOMBOLA, BRAVISSIMOOO!");
-        socket.emit("endGame", room);
       });
     }
   }

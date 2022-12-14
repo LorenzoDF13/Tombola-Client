@@ -66,7 +66,7 @@ export default function HomeScreen({ navigation, route }) {
           },
         ]}
       >
-        Impossibile connettersi al Server {connectionError.toString()}
+        Impossibile connettersi al Server {connectionError.type}
       </Banner>
       <View style={{ justifyContent: "center", flexDirection: "row" }}>
         <Text variant="headlineLarge" style={{ margin: 10 }}>

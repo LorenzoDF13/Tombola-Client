@@ -1,6 +1,5 @@
 {
   "expo": {
-    "jsEngine": "hermes",
     "name": "tombola",
     "slug": "tombola",
     "version": "1.0.0",
